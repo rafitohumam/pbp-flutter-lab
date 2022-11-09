@@ -1,0 +1,10 @@
+^C:\USERS\RAFIT\DESKTOP\TUGAS KULIAH\PBP\PBP-FLUTTER-LAB\BUILD\WINDOWS\CMAKEFILES\A38705295C44EEACE5230E1B62477C11\INSTALL_FORCE.RULE
+setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

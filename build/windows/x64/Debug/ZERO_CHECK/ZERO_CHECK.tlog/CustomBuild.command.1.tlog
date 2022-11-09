@@ -1,0 +1,10 @@
+^C:\USERS\RAFIT\DESKTOP\TUGAS KULIAH\PBP\PBP-FLUTTER-LAB\BUILD\WINDOWS\CMAKEFILES\A38705295C44EEACE5230E1B62477C11\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SC:/Users/rafit/Desktop/TUGAS KULIAH/PBP/pbp-flutter-lab/windows" "-BC:/Users/rafit/Desktop/TUGAS KULIAH/PBP/pbp-flutter-lab/build/windows" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/rafit/Desktop/TUGAS KULIAH/PBP/pbp-flutter-lab/build/windows/counter_7.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
