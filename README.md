@@ -1,8 +1,8 @@
-# Assignment - Tugas 7
-# APP_NAME: counter_7
-
 ## Rafito Humam Abrar - 2106633626
 ## PBP E
+
+# APP_NAME: counter_7
+# Assignment - Tugas 7
 
 ## Jelaskan apa yang dimaksud dengan stateless widget dan stateful widget dan jelaskan perbedaan dari keduanya.
 
@@ -82,9 +82,336 @@ floatingActionButton:
             tooltip: 'Increment',
             child: const Icon(Icons.add),
           ),
-        )
+        )seven friday
       ]), // This trailing comma makes auto-formatting nicer for build methods.
 ```
 Potongan kode di atas dilakukan untuk menambahkan dua buah *floating buttons* yang ditempatkan di ujung kanan-kiri bawah sesuai dengan *layout widgets*. Kedua button tersebut nantinya akan memanggil fungsi yang sudah didefinisikan sebelumnya untuk melakukan *increment* maupun *decrement* dari nilai variabel `_counter`.
+
+Selanjutnya memantau perubahan menggunakan `flutter run`, dan melakukan `git add-commit-push` untuk memasukannnya ke dalam repositori ini.
+
+# Assignment - Tugas 8
+
+## Jelaskan perbedaan `Navigator.push` dan `Navigator.pushReplacement`
+
+`Navigator` merupakan sebuah method untuk melakukan navigasi antar aplikasi, dan pada tugas ini digunakan kebanyakan pada *appbar drawer* untuk melakukan navigasi antar halaman aplikasi, yaitu `main.dart`, `form.dart`, dan `data.dart`.
+
+### `Navigator.push` 
+Merupakan sebuah method untuk melakukan routing dengan menambahkan (*push*) halaman ke sebuah stack, sehingga halaman yang baru akan dimunculkan di posisi teratas stack.
+### `Navigator.pushReplacement` 
+Merupakan sebuah method untuk melakukan routing dengan menambahkan (*push*) halaman ke sebuah stack, namun halaman yang lama akan diganti atau di-*replace* dengan halaman yang baru.
+
+## Sebutkan widget apa saja yang kamu pakai di proyek kali ini dan jelaskan fungsinya
+
+Dalam proyek flutter, hampir semua mekanisme dari UI pada aplikasi tersebut merupakan sebuah widget. Beberapa diantaranya adalah:
+
+1. `Appbar`, sebuah widget yang menjadi *head navbar* untuk aplikasi tersebut.
+2. `Text`, sebuah widget yang digunakan untuk menampilkan tulisan. Aplikasi ini menggunakan widget tersebut untuk menampilkan tulisan GANJIL, GENAP, dan counter.
+3. `Center, Row, Container, Align`, merupakan kumpulan *layout widgets* yang digunakan untuk mengatur *alignment* dari *widget-widget* yang ditampilkan di UI.
+4. `FloatingActionButton`, sebuah widget button yang bersifat *floating*. Aplikasi ini menggunakan dua buah `FloatingActionButton`, masing-masing untuk menambahkan dan mengurangi value dari counter.
+5. `ListTile`, sebuah widget untuk menampung element text dalam bentuk baris List,
+6. `Icon`, memberikan elemen icon untuk visualisasi form,
+7. `DropdownButton`, memberikan sebuah tombol untuk menunjukan pilihan dropdown.
+8. `DropdownMenuItem`, berfungsi untuk menampilkan item atau elemen setelah  DropdownButton dipencet.
+9. `Form`, berfungsi untuk membuat sebuah form yang mengambil input dari user.
+
+## Sebutkan jenis-jenis event yang ada pada Flutter (contoh: onPressed)
+
+Beberapa contoh event yang berada pada flutter adalah sebagai berikut:
+
+1. `onPressed()`
+2. `onSaved()`
+3. `onTap()`
+4. `onChanged()`
+
+## Jelaskan bagaimana cara kerja Navigator dalam "mengganti" halaman dari aplikasi Flutter
+
+Sesuai dengan penjelasan soal nomor 1, `navigator` akan mengambil data-data dari setiap halaman (*routing*) dan akan mengolahnya dalam bentuk *stack*. Kemudian, sesuai dengan *method* `navigator` yang diberikan oleh *user*, maka navigator akan memperlakukan stack sebagaimana sebuah stack bersifat *First In First Out* (FIFO) dan akan mengganti halaman pada aplikasi.
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas
+
+Pertama, saya menggunakan proyek flutter yang digunakan pada tugas sebelumnya, yaitu adalah `counter_7`. Setelah semua file proyek telah diinisiasi, maka dilakukan penyuntingan terhadap file `lib/main.dart` di Android Studio. Beberapa *line* yang ditambahkan adalah:
+
+### `main.dart`
+```shell
+drawer: Drawer(
+        child: Column(
+          children: [
+            // Menambahkan clickable menu
+            ListTile(
+              title: const Text('Counter'),
+              onTap: () {
+                // Route menu ke halaman utama
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyHomePage()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Tambah Budget'),
+              onTap: () {
+                // Route menu ke halaman form
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyFormPage()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Data Budget'),
+              onTap: () {
+                // Route menu ke halaman form
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyDataPage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+```
+
+*Drawer* ini ditambahkan untuk menambahkan `navigator` untuk page aplikasi Tambah Budget dan Data Budget dan melakukan routing dengan baik.
+
+### `form.dart`
+
+```shell
+var listBudget = [];
+
+class Budget {
+  String judulBudget = "";
+  int nominalBudget = 0;
+  String jenisBudget = "";
+
+  Budget(String judul, int nominal, String jenis){
+    judulBudget = judul;
+    nominalBudget = nominal;
+    jenisBudget = jenis;
+  }
+}
+```
+
+Kode ini ditambahkan untuk menginisiasi sebuah tampungan berupa *class* `Budget` untuk menyimpan properti dari setiap *budget*, seperti judul *budget*, nominal *budget*, dan jenis *budget*. Kemudian, diinisiasi bentuk *list* pada `listBudget`untuk kemudian nantinya ditambahkan sebagai tempat penyimpan properti sebelum dipindahkan ke `cards`.
+
+```shell
+Padding(
+                  // Menggunakan padding sebesar 8 pixels
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Contoh: 80000",
+                      labelText: "Nominal",
+                      // Menambahkan icon agar lebih intuitif
+                      icon: const Icon(Icons.money_rounded),
+                      // Menambahkan circular border agar lebih rapi
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                    // Menambahkan behavior saat nominal diketik
+                    onChanged: (String? value) {
+                      setState(() {
+                        if (value == null || value.isEmpty) {
+                          _nominalBudget = 0;
+                        } else {
+                          _nominalBudget = int.parse(value);
+                        }
+                      });
+                    },
+                    // Menambahkan behavior saat data disimpan
+                    onSaved: (String? value) {
+                      setState(() {
+                        if (value == null || value.isEmpty) {
+                          _nominalBudget = 0;
+                        } else {
+                          _nominalBudget = int.parse(value);
+                        }
+                      });
+                    },
+                    // Validator sebagai validasi form
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Nominal tidak boleh kosong!';
+                      }
+                      if (int.parse(value) == 0) {
+                        return 'Nominal tidak boleh nol!';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+...
+TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 15,
+                            child: ListView(
+                              padding:
+                                const EdgeInsets.only(top: 20, bottom: 20),
+                              shrinkWrap: true,
+                              children: <Widget>[
+                                const Center(child: Text('Informasi Data')),
+                                const SizedBox(height: 20),
+                                Center(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Judul : $_judulBudget",
+                                        style: const TextStyle(color: Colors.blue),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text(
+                                        "Nominal : $_nominalBudget",
+                                        style: const TextStyle(color: Colors.blue),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text(
+                                        "Jenis : $_jenisBudget",
+                                        style: const TextStyle(color: Colors.blue),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                            TextButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(Colors.black),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Budget budget = Budget(_judulBudget, _nominalBudget, _jenisBudget);
+                                listBudget.add(budget);
+                              },
+                              child: const Text("SUBMIT"),
+```
+
+Potongan kode diatas ditambahkan untuk menambahkan sebuah *form input* yang meminta judul dan nominal dari *budget* user yang ingin ditambahkan. Selain itu, widget `TextButton` juga ditambahkan untuk melakukan inisialisasi dari setiap *value* sebelum user melakukan *submit*.
+
+### `data.dart`
+
+```shell
+var formData = form.listBudget;
+
+class MyDataPage extends StatefulWidget {
+  const MyDataPage({super.key});
+
+  @override
+  State<MyDataPage> createState() => _MyDataPageState();
+}
+
+class _MyDataPageState extends State<MyDataPage> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Data Budget'),
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            // Menambahkan clickable menu
+            ListTile(
+              title: const Text('Counter'),
+              onTap: () {
+                // Route menu ke halaman utama
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyHomePage()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Tambah Budget'),
+              onTap: () {
+                // Route menu ke halaman form
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyFormPage()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Data Budget'),
+              onTap: () {
+                // Route menu ke halaman form
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyDataPage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            for (int i=0; i < formData.length; i++)...[
+              Card(
+                elevation: 20,
+                shadowColor: Colors.blue,
+                color: Colors.white,
+                child: SizedBox(
+                  width: 1000,
+                  height: 90,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            formData[i].judulBudget,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget> [
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                formData[i].nominalBudget.toString(),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                formData[i].jenisBudget,
+                                style: const TextStyle(
+                                  color: Colors.black,
+...
+```
+
+Potongan kode diatas ditambahkan untuk melakukan ekstraksi dari *list* `listBudget` untuk kemudian dipresentasikan dalam bentuk *cards*. Kumpulan *cards* ini disimpan di halaman baru yaitu adalah Data Budget.
 
 Selanjutnya memantau perubahan menggunakan `flutter run`, dan melakukan `git add-commit-push` untuk memasukannnya ke dalam repositori ini.
