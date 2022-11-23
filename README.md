@@ -444,3 +444,5 @@ Beberapa widget yang digunakan di Tugas 9 adalah sebagai berikut:
 3. Data yang telah di-*decode* dan dikonversi akan ditampilkan pada aplikasi.
 
 ## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas
+
+Selanjutnya memantau perubahan menggunakan `flutter run`, dan melakukan `git add-commit-push` untuk memasukannnya ke dalam repositori ini.
