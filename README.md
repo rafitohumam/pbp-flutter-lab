@@ -415,3 +415,32 @@ class _MyDataPageState extends State<MyDataPage> {
 Potongan kode diatas ditambahkan untuk melakukan ekstraksi dari *list* `listBudget` untuk kemudian dipresentasikan dalam bentuk *cards*. Kumpulan *cards* ini disimpan di halaman baru yaitu adalah Data Budget.
 
 Selanjutnya memantau perubahan menggunakan `flutter run`, dan melakukan `git add-commit-push` untuk memasukannnya ke dalam repositori ini.
+
+# Assignment - Tugas 9
+
+## Apakah bisa kita melakukan pengambilan data JSON tanpa membuat model terlebih dahulu? Jika iya, apakah hal tersebut lebih baik daripada membuat model sebelum melakukan pengambilan data JSON?
+
+Kita dapat melakukan pengambilan data JSON tanpa membuat model terlebih dahulu. Namun, dengan adanya pembuatan model terlebih dahulu maka data yang ingin disajikan dapat tersimpan lebih rapi, terstuktur, dan sesuai dengan setiap jenis data. Hal ini sesuai dengan tujuan *data delivery* dengan format JSON (*Javascript Object Notation*) yang memperbolehkan adanya *interchange data* dengan efisien dan rapih. Sehingga, tidak direkomendasikan untuk mengambil data JSON tanpa membuat model.
+
+## Sebutkan widget apa saja yang kamu pakai di proyek kali ini dan jelaskan fungsinya
+
+Beberapa widget yang digunakan di Tugas 9 adalah sebagai berikut:
+
+1. `Appbar`, sebuah widget yang menjadi *head navbar* untuk aplikasi tersebut.
+2. `Text`, sebuah widget yang digunakan untuk menampilkan tulisan. Aplikasi ini menggunakan widget tersebut untuk menampilkan tulisan GANJIL, GENAP, dan counter.
+3. `Center, Row, Container, Align`, merupakan kumpulan *layout widgets* yang digunakan untuk mengatur *alignment* dari *widget-widget* yang ditampilkan di UI.
+4. `FloatingActionButton`, sebuah widget button yang bersifat *floating*. Aplikasi ini menggunakan dua buah `FloatingActionButton`, masing-masing untuk menambahkan dan mengurangi value dari counter.
+5. `ListTile`, sebuah widget untuk menampung element text dalam bentuk baris List,
+6. `Icon`, memberikan elemen icon untuk visualisasi form,
+7. `DropdownButton`, memberikan sebuah tombol untuk menunjukan pilihan dropdown.
+8. `DropdownMenuItem`, berfungsi untuk menampilkan item atau elemen setelah  DropdownButton dipencet.
+9. `Form`, berfungsi untuk membuat sebuah form yang mengambil input dari user.
+10. `CheckBox`, berfungsi sebagai suatu tombol *boolean* yang mengubah status dari *watched* atau belum *watched* pada *watch list* yang diberikan.
+
+##  Jelaskan mekanisme pengambilan data dari json hingga dapat ditampilkan pada Flutter
+
+1. Pertama, data JSON didapatkan dengan melakukan `fetch` oleh sebuah *method*.
+2. Data JSON yang sudah didapatkan di-*decode* atau dikonversi menjadi data yang didaftarkan dalam model.
+3. Data yang telah di-*decode* dan dikonversi akan ditampilkan pada aplikasi.
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas
