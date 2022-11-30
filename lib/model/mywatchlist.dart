@@ -10,12 +10,12 @@ String myWatchListToJson(List<MyWatchList> data) => json.encode(List<dynamic>.fr
 
 class MyWatchList {
   MyWatchList({
-   required this.model,
+    required this.model,
     required this.pk,
     required this.fields,
   });
 
-  Model model;
+  Model? model;
   int pk;
   Fields fields;
 
@@ -72,7 +72,7 @@ final modelValues = EnumValues({
 
 class EnumValues<T> {
   Map<String, T> map;
-  Map<T, String> reverseMap;
+  late Map<T, String> reverseMap;
 
   EnumValues(this.map);
 

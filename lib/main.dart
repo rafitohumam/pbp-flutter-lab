@@ -1,41 +1,11 @@
-import 'package:counter_7/form.dart';
-import 'package:counter_7/data.dart';
+import 'package:counter_7/page/form.dart';
+import 'package:counter_7/page/data.dart';
+import 'package:counter_7/page/drawer.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
-}
-
-Mobil mobilFromJson(String str) => Mobil.fromJson(json.decode(str));
-String mobilToJson(Mobil data) => json.encode(data.toJson());
-
-class Mobil {
-  Mobil({
-    required this.id,
-    required this.brand,
-    required this.model,
-    required this.color,
-  });
-
-  int id;
-  String brand;
-  String model;
-  String color;
-
-  factory Mobil.fromJson(Map<String, dynamic> json) => Mobil(
-    id: json["id"],
-    brand: json["brand"],
-    model: json["model"],
-    color: json["color"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "brand": brand,
-    "model": model,
-    "color": color,
-  };
 }
 
 class MyApp extends StatelessWidget {
@@ -100,43 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       // Menambahkan drawer menu
-      drawer: Drawer(
-        child: Column(
-          children: [
-            // Menambahkan clickable menu
-            ListTile(
-              title: const Text('Counter'),
-              onTap: () {
-                // Route menu ke halaman utama
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MyHomePage()),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Tambah Budget'),
-              onTap: () {
-                // Route menu ke halaman form
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MyFormPage()),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Data Budget'),
-              onTap: () {
-                // Route menu ke halaman form
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MyDataPage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: buildDrawer(context),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
