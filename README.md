@@ -445,4 +445,268 @@ Beberapa widget yang digunakan di Tugas 9 adalah sebagai berikut:
 
 ## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas
 
+Pertama, saya menggunakan proyek flutter yang digunakan pada tugas sebelumnya, yaitu adalah `counter_7`. Selanjutnya, saya melakukan refaktorisasi dengan membuat folder `model` dan `page` agar dapat terbagi dengan sesuai dan baik. pada folder `model`, didaftarkan file model `mywatchlist.dart`, yang telah dibantu oleh `Quicktype`. Berikut adalah isi file tersebut:
+
+### `mywatchlist.dart`
+
+```shell
+// To parse this JSON data, do
+//
+//     final myWatchList = myWatchListFromJson(jsonString);
+
+import 'dart:convert';
+
+List<MyWatchList> myWatchListFromJson(String str) => List<MyWatchList>.from(json.decode(str).map((x) => MyWatchList.fromJson(x)));
+
+String myWatchListToJson(List<MyWatchList> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class MyWatchList {
+  MyWatchList({
+    required this.model,
+    required this.pk,
+    required this.fields,
+  });
+
+  Model? model;
+  int pk;
+  Fields fields;
+
+  factory MyWatchList.fromJson(Map<String, dynamic> json) => MyWatchList(
+    model: modelValues.map[json["model"]],
+    pk: json["pk"],
+    fields: Fields.fromJson(json["fields"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "model": modelValues.reverse[model],
+    "pk": pk,
+    "fields": fields.toJson(),
+  };
+}
+
+class Fields {
+  Fields({
+    required this.watched,
+    required this.title,
+    required this.rating,
+    required this.releaseDate,
+    required this.review,
+  });
+
+  bool watched;
+  String title;
+  double rating;
+  DateTime releaseDate;
+  String review;
+
+  factory Fields.fromJson(Map<String, dynamic> json) => Fields(
+    watched: json["watched"],
+    title: json["title"],
+    rating: json["rating"].toDouble(),
+    releaseDate: DateTime.parse(json["release_date"]),
+    review: json["review"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "watched": watched,
+    "title": title,
+    "rating": rating,
+    "release_date": "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+    "review": review,
+  };
+}
+
+enum Model { MYWATCHLIST_MY_WATCH_LIST }
+
+final modelValues = EnumValues({
+  "mywatchlist.MyWatchList": Model.MYWATCHLIST_MY_WATCH_LIST
+});
+
+class EnumValues<T> {
+  Map<String, T> map;
+  late Map<T, String> reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    if (reverseMap == null) {
+      reverseMap = map.map((k, v) => new MapEntry(v, k));
+    }
+    return reverseMap;
+  }
+}
+```
+Kemudian, saya membagi tabel navigasi ke file baru bernama `drawer.dart` pada folder `page`. Hal ini berfungsi untuk menghemat dan memberikan pengembang keleluasaan untuk menambahkan navigasi halaman baru tanpa harus melakukan penyuntingan pada drawer setiap halaman. Nantinya, file ini akan diimport ke setiap page. File ini berisi seperti berikut:
+
+### `drawer.dart`
+
+```shell
+import 'package:flutter/material.dart';
+import 'package:counter_7/main.dart';
+import 'package:counter_7/page/form.dart';
+import 'package:counter_7/page/data.dart';
+import 'package:counter_7/page/mywatchlist_page.dart';
+
+Drawer buildDrawer(BuildContext context) {
+  return Drawer(
+    child: Column(
+      children: [
+        ListTile(
+          title: const Text('Counter'),
+          onTap: () {
+            // Route menu ke halaman utama
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MyHomePage()),
+            );
+          },
+        ),
+        ListTile(
+          title: const Text('Tambah Budget'),
+          onTap: () {
+            // Route menu ke halaman form
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MyFormPage()),
+            );
+          },
+        ),
+        ListTile(
+          title: const Text('Data Budget'),
+          onTap: () {
+            // Route menu ke halaman form
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MyDataPage()),
+            );
+          },
+        ),
+        ListTile(
+          title: const Text('My Watch List'),
+          onTap: () {
+            // Route menu ke halaman to do
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MyWatchListPage()),
+            );
+          },
+        ),
+      ],
+    ),
+  );
+}
+```
+
+Kemudian, saya membuat file di folder page bernama `mywatchlist_page.dart`. File ini merupakan halaman untuk menunjukan `mywatchlist` dari film-film yang di-*parse* dari data di Heroku Tugas 3. Disini, *parsing* JSON dilakukan serta ditampilkan dalam bentuk *cards*.
+
+### mywatchlist_page.dart
+
+```shell
+import 'package:flutter/material.dart';
+import 'package:counter_7/main.dart';
+import 'package:counter_7/page/form.dart';
+import 'package:counter_7/page/drawer.dart';
+import 'package:counter_7/model/mywatchlist.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class MyWatchListPage extends StatefulWidget {
+  const MyWatchListPage({Key? key}) : super(key: key);
+
+  @override
+  _MyWatchListPageState createState() => _MyWatchListPageState();
+}
+
+class _MyWatchListPageState extends State<MyWatchListPage> {
+  Future<List<MyWatchList>> fetchMyWatchList() async {
+    var url = Uri.parse('https://tugas3-rafitohumam.herokuapp.com/mywatchlist/json/');
+    var response = await http.get(
+      url,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+    );
+
+    // melakukan decode response menjadi bentuk json
+    var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+    // melakukan konversi data json menjadi object MyWatchList
+    List<MyWatchList> listMyWatchList = [];
+    for (var d in data) {
+      if (d != null) {
+        listMyWatchList.add(MyWatchList.fromJson(d));
+      }
+    }
+    return listMyWatchList;
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('MyWatchList'),
+        ),
+        drawer: buildDrawer(context),
+        body: FutureBuilder(
+            future: fetchMyWatchList(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.data == null) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                if (!snapshot.hasData) {
+                  return Column(
+                    children: const [
+                      Text(
+                        "Tidak ada to do list :(",
+                        style: TextStyle(
+                            color: Color(0xff59A5D8),
+                            fontSize: 20),
+                      ),
+                      SizedBox(height: 8),
+                    ],
+                  );
+                } else {
+                  return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (_, index) =>
+                          Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.all(20.0),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      color: Colors.black,
+                                      blurRadius: 2.0
+                                  )
+                                ]
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${snapshot.data![index].fields.title}",
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text("${snapshot.data![index].fields.watched}"),
+                              ],
+                            ),
+                          )
+                  );
+                }
+              }
+            }
+        )
+    );
+  }
+}
+```
+
 Selanjutnya memantau perubahan menggunakan `flutter run`, dan melakukan `git add-commit-push` untuk memasukannnya ke dalam repositori ini.
