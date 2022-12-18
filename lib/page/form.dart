@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:counter_7/main.dart';
 import 'package:counter_7/page/data.dart';
-import 'package:counter_7/page/drawer.dart';
+import 'package:counter_7/drawer.dart';
 import 'package:counter_7/model/mywatchlist.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -17,7 +17,7 @@ class Budget {
   int nominalBudget = 0;
   String jenisBudget = "";
 
-  Budget(String judul, int nominal, String jenis){
+  Budget(String judul, int nominal, String jenis) {
     judulBudget = judul;
     nominalBudget = nominal;
     jenisBudget = jenis;
@@ -137,7 +137,8 @@ class _MyFormPageState extends State<MyFormPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: DropdownButton<String>(
                     value: null,
-                    hint: Text(_jenisBudget == '' ? 'Pilih jenis' : _jenisBudget),
+                    hint:
+                        Text(_jenisBudget == '' ? 'Pilih jenis' : _jenisBudget),
                     items: listJenisBudget.map((String items) {
                       return DropdownMenuItem(
                         value: items,
@@ -166,60 +167,68 @@ class _MyFormPageState extends State<MyFormPage> {
                             ),
                             elevation: 15,
                             child: ListView(
-                              padding:
-                                const EdgeInsets.only(top: 20, bottom: 20),
-                              shrinkWrap: true,
-                              children: <Widget>[
-                                const Center(child: Text('Informasi Data')),
-                                const SizedBox(height: 20),
-                                Center(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Judul : $_judulBudget",
-                                        style: const TextStyle(color: Colors.blue),
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      Text(
-                                        "Nominal : $_nominalBudget",
-                                        style: const TextStyle(color: Colors.blue),
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      Text(
-                                        "Jenis : $_jenisBudget",
-                                        style: const TextStyle(color: Colors.blue),
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                    ],
+                                padding:
+                                    const EdgeInsets.only(top: 20, bottom: 20),
+                                shrinkWrap: true,
+                                children: <Widget>[
+                                  const Center(child: Text('Informasi Data')),
+                                  const SizedBox(height: 20),
+                                  Center(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Judul : $_judulBudget",
+                                          style: const TextStyle(
+                                              color: Colors.blue),
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          "Nominal : $_nominalBudget",
+                                          style: const TextStyle(
+                                              color: Colors.blue),
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          "Jenis : $_jenisBudget",
+                                          style: const TextStyle(
+                                              color: Colors.blue),
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                          ),
-                            TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(Colors.black),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Budget budget = Budget(_judulBudget, _nominalBudget, _jenisBudget);
-                                listBudget.add(budget);
-                              },
-                              child: const Text("SUBMIT"),
-                            ),
-                            ]),
-                        );
-                      },
-                    );
-                  }
-                },
-                child: const Text("Simpan", style: TextStyle(color: Colors.white),
-                ),
+                                  TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.black),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Budget budget = Budget(_judulBudget,
+                                          _nominalBudget, _jenisBudget);
+                                      listBudget.add(budget);
+                                    },
+                                    child: const Text("SUBMIT"),
+                                  ),
+                                ]),
+                          );
+                        },
+                      );
+                    }
+                  },
+                  child: const Text(
+                    "Simpan",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),

@@ -1,6 +1,6 @@
 import 'package:counter_7/page/form.dart';
 import 'package:counter_7/page/data.dart';
-import 'package:counter_7/page/drawer.dart';
+import 'package:counter_7/drawer.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
@@ -93,11 +93,10 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             _counter % 2 == 0
                 ? const Text(
-              'GENAP',
-              style: TextStyle(color: Colors.red),):
-            const Text(
-                'GANJIL',
-                style: TextStyle(color: Colors.blue)),
+                    'GENAP',
+                    style: TextStyle(color: Colors.red),
+                  )
+                : const Text('GANJIL', style: TextStyle(color: Colors.blue)),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
@@ -106,16 +105,16 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton:
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
           alignment: Alignment.bottomLeft,
           margin: const EdgeInsets.only(left: 33),
           child: _counter != 0
               ? FloatingActionButton(
-            onPressed: _decrementCounter,
-            tooltip: 'Decrement',
-            child: const Icon(Icons.remove),
-          )
+                  onPressed: _decrementCounter,
+                  tooltip: 'Decrement',
+                  child: const Icon(Icons.remove),
+                )
               : null,
         ),
         Align(

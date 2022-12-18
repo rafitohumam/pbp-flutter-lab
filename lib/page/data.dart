@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:counter_7/main.dart';
 import 'package:counter_7/page/data.dart';
-import 'package:counter_7/page/drawer.dart';
+import 'package:counter_7/drawer.dart';
 import 'package:counter_7/page/form.dart' as form;
 import 'package:counter_7/model/mywatchlist.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +21,6 @@ class MyDataPage extends StatefulWidget {
 }
 
 class _MyDataPageState extends State<MyDataPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +31,7 @@ class _MyDataPageState extends State<MyDataPage> {
       body: Center(
         child: Column(
           children: <Widget>[
-            for (int i=0; i < formData.length; i++)...[
+            for (int i = 0; i < formData.length; i++) ...[
               Card(
                 elevation: 20,
                 shadowColor: Colors.blue,
@@ -58,7 +57,7 @@ class _MyDataPageState extends State<MyDataPage> {
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget> [
+                          children: <Widget>[
                             Align(
                               alignment: Alignment.bottomLeft,
                               child: Text(
