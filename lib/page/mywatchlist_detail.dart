@@ -1,9 +1,5 @@
-import 'package:ruok/Stories/models/replies_models.dart';
-import 'package:ruok/Stories/models/stories_fetch.dart';
-import 'package:ruok/Stories/models/replies_fetch.dart';
-import 'package:ruok/Stories/pages/replies_detail.dart';
-import 'package:ruok/Stories/pages/replies_post.dart';
-import 'package:ruok/Stories/models/stories_models.dart';
+import 'package:counter_7/model/mywatchlist.dart';
+import 'package:counter_7/model/mywatchlist_fetch.dart';
 import 'package:counter_7/drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -17,18 +13,17 @@ class MyWatchlistDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int stories_id = MyWatchList.pk;
-    String stories_title = MyWatchList.fields.title;
-    String stories_author = MyWatchList.fields.author.toString();
-    String stories_date =
-        MyWatchList.fields.dateTime.toString().substring(0, 16);
-    String stories_content = MyWatchList.fields.content;
+    String watchlist_watched = MyWatchList.fields.watched;
+    String watchlist_title = MyWatchList.fields.title;
+    String watchlist_rating = MyWatchList.fields.rating;
+    String watchlist_date = MyWatchList.fields.releaseDate;
+    String watchlist_review = MyWatchList.fields.review;
 
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
         backgroundColor: purple,
-        title: const Text('DETAILS STORIES',
+        title: const Text('DETAILS WATCHLIST',
             style: TextStyle(
               color: Colors.white,
               fontSize: 25,
@@ -36,126 +31,78 @@ class MyWatchlistDetail extends StatelessWidget {
             )),
       ),
       drawer: buildDrawer(context),
-      body: SingleChildScrollView(
-        child: Stack(children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white,
+      body: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(stories_title,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: black,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    )),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  stories_author,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  stories_date,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                Text(
-                  stories_content,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-              ],
+          ],
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(watchlist_title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: black,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                )),
+            const SizedBox(
+              height: 10,
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyReplyPage(stories_id: stories_id)),
-              );
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 300),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 7,
-                    offset: const Offset(0, 3), // changes position of shadow
-                  ),
-                ],
-                borderRadius: BorderRadius.circular(20),
-                color: purple,
+            Text(
+              "Release date: ${watchlist_date}",
+              style: const TextStyle(
+                color: black,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
               ),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                          padding: const EdgeInsets.all(15.0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          alignment: Alignment.center),
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MyReplyPage(
-                                  stories_id: stories_id,
-                                )),
-                      ),
-                      child: const Text('SHOW REPLIES',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ),
-                  ]),
             ),
-          ),
-        ]),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Rating: ${watchlist_rating}",
+              style: const TextStyle(
+                color: black,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Status: ${watchlist_watched}",
+              style: const TextStyle(
+                color: black,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Review: ${watchlist_review}",
+              style: const TextStyle(
+                color: black,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.fromLTRB(35, 10, 10, 10),

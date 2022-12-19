@@ -103,14 +103,6 @@ class _MyWatchListPageState extends State<MyWatchListPage> {
                                             ),
                                           ),
                                           const SizedBox(height: 10),
-                                          Text(
-                                            "${(snapshot.data![index].fields.content).toString().substring(0, 5)}...",
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              fontSize: 13.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
                                         ],
                                       ),
                                     ],

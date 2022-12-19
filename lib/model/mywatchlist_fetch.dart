@@ -6,7 +6,7 @@ List<MyWatchList> listMyWatchListTotal = [];
 
 Future<List<MyWatchList>> fetchMyWatchList() async {
   var url =
-      Uri.parse('https://tugas-rafitohumam.up.railway.app/mywatchlist/json/');
+      Uri.parse('https://tugas3-rafitohumam.up.railway.app/mywatchlist/json/');
   var response = await http.get(
     url,
   );
