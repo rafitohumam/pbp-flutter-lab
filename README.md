@@ -536,7 +536,7 @@ class EnumValues<T> {
   }
 }
 ```
-Kemudian, saya membagi tabel navigasi ke file baru bernama `drawer.dart` pada folder `page`. Hal ini berfungsi untuk menghemat dan memberikan pengembang keleluasaan untuk menambahkan navigasi halaman baru tanpa harus melakukan penyuntingan pada drawer setiap halaman. Nantinya, file ini akan diimport ke setiap page. File ini berisi seperti berikut:
+Kemudian, saya membagi tabel navigasi ke file baru bernama `drawer.dart` pada folder folder `lib`. Hal ini berfungsi untuk menghemat dan memberikan pengembang keleluasaan untuk menambahkan navigasi halaman baru tanpa harus melakukan penyuntingan pada drawer setiap halaman. Nantinya, file ini akan diimport ke setiap page. File ini berisi seperti berikut:
 
 ### `drawer.dart`
 
@@ -597,16 +597,49 @@ Drawer buildDrawer(BuildContext context) {
 }
 ```
 
-Kemudian, saya membuat file di folder page bernama `mywatchlist_page.dart`. File ini merupakan halaman untuk menunjukan `mywatchlist` dari film-film yang di-*parse* dari data di Heroku Tugas 3. Disini, *parsing* JSON dilakukan serta ditampilkan dalam bentuk *cards*.
+Tidak lupa untuk membuat fungsi fetch di file `mywatchlist_fetch.dart`, dengan isi file seperti berikut:
+
+### mywatchlist_fetch.dart
+
+```shell
+import 'dart:convert';
+import 'package:counter_7/model/mywatchlist.dart';
+import 'package:http/http.dart' as http;
+
+List<MyWatchList> listMyWatchListTotal = [];
+
+Future<List<MyWatchList>> fetchMyWatchList() async {
+  var url =
+      Uri.parse('https://tugas3-rafitohumam.up.railway.app/mywatchlist/json/');
+  var response = await http.get(
+    url,
+  );
+
+  var data = jsonDecode(utf8.decode(response.bodyBytes));
+  List<MyWatchList> listMyWatchList = [];
+  for (var d in data) {
+    if (d != null) {
+      listMyWatchList.add(MyWatchList.fromJson(d));
+      listMyWatchListTotal.add(MyWatchList.fromJson(d));
+    }
+  }
+  return listMyWatchList;
+}
+
+```
+
+Kemudian, saya membuat file di folder page bernama `mywatchlist_page.dart`. File ini merupakan halaman untuk menunjukan `mywatchlist` dari film-film yang di-*parse* dari data di Heroku Tugas 3. Disini, *parsing* JSON dilakukan serta ditampilkan dalam bentuk *cards*. Namun tidak hanya itu,. saya juga membuat file `mywatchlist_detail.dart` sebagai halaman details dari setiap judul dari watchlist.
 
 ### mywatchlist_page.dart
 
 ```shell
+import 'package:counter_7/page/mywatchlist_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:counter_7/main.dart';
 import 'package:counter_7/page/form.dart';
-import 'package:counter_7/page/drawer.dart';
+import 'package:counter_7/drawer.dart';
 import 'package:counter_7/model/mywatchlist.dart';
+import 'package:counter_7/model/mywatchlist_fetch.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -618,28 +651,6 @@ class MyWatchListPage extends StatefulWidget {
 }
 
 class _MyWatchListPageState extends State<MyWatchListPage> {
-  Future<List<MyWatchList>> fetchMyWatchList() async {
-    var url = Uri.parse('https://tugas3-rafitohumam.herokuapp.com/mywatchlist/json/');
-    var response = await http.get(
-      url,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
-    );
-
-    // melakukan decode response menjadi bentuk json
-    var data = jsonDecode(utf8.decode(response.bodyBytes));
-
-    // melakukan konversi data json menjadi object MyWatchList
-    List<MyWatchList> listMyWatchList = [];
-    for (var d in data) {
-      if (d != null) {
-        listMyWatchList.add(MyWatchList.fromJson(d));
-      }
-    }
-    return listMyWatchList;
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -658,9 +669,8 @@ class _MyWatchListPageState extends State<MyWatchListPage> {
                     children: const [
                       Text(
                         "Tidak ada to do list :(",
-                        style: TextStyle(
-                            color: Color(0xff59A5D8),
-                            fontSize: 20),
+                        style:
+                            TextStyle(color: Color(0xff59A5D8), fontSize: 20),
                       ),
                       SizedBox(height: 8),
                     ],
@@ -668,42 +678,206 @@ class _MyWatchListPageState extends State<MyWatchListPage> {
                 } else {
                   return ListView.builder(
                       itemCount: snapshot.data!.length,
-                      itemBuilder: (_, index) =>
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
-                            padding: const EdgeInsets.all(20.0),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15.0),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.black,
-                                      blurRadius: 2.0
-                                  )
-                                ]
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "${snapshot.data![index].fields.title}",
-                                  style: const TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
+                      itemBuilder: (_, index) => Column(
+                            children: [
+                              const SizedBox(height: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MyWatchlistDetail(
+                                            MyWatchList:
+                                                listMyWatchListTotal[index])),
+                                  );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 8),
+                                  padding: const EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                            color: Colors.black,
+                                            blurRadius: 2.0)
+                                      ]),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Color.fromARGB(
+                                                          255, 255, 255, 255)
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 2,
+                                                  blurRadius: 7,
+                                                  offset: const Offset(0,
+                                                      3), // changes position of shadow
+                                                ),
+                                              ],
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color: Colors.blue,
+                                            ),
+                                            child: Text(
+                                              "${snapshot.data![index].fields.title}",
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: 10),
-                                Text("${snapshot.data![index].fields.watched}"),
-                              ],
-                            ),
-                          )
-                  );
+                              ),
+                            ],
+                          ));
                 }
               }
-            }
-        )
+            }));
+  }
+}
+```
+
+### mywatchlist_detail.dart
+
+```shell
+import 'package:counter_7/model/mywatchlist.dart';
+import 'package:counter_7/model/mywatchlist_fetch.dart';
+import 'package:counter_7/drawer.dart';
+import 'package:flutter/material.dart';
+
+class MyWatchlistDetail extends StatelessWidget {
+  const MyWatchlistDetail({super.key, required this.MyWatchList});
+  static const purple = Color(0xFF613FE5);
+  static const black = Color(0xFF09050D);
+  static const yellow = Color(0xFFFFCA0C);
+  static const red = Color(0xFFDE1C1C);
+  final MyWatchList;
+
+  @override
+  Widget build(BuildContext context) {
+    String watchlist_watched = MyWatchList.fields.watched;
+    String watchlist_title = MyWatchList.fields.title;
+    String watchlist_rating = MyWatchList.fields.rating;
+    String watchlist_date = MyWatchList.fields.releaseDate;
+    String watchlist_review = MyWatchList.fields.review;
+
+    return Scaffold(
+      backgroundColor: black,
+      appBar: AppBar(
+        backgroundColor: purple,
+        title: const Text('DETAILS WATCHLIST',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            )),
+      ),
+      drawer: buildDrawer(context),
+      body: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(watchlist_title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: black,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                )),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Release date: ${watchlist_date}",
+              style: const TextStyle(
+                color: black,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Rating: ${watchlist_rating}",
+              style: const TextStyle(
+                color: black,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Status: ${watchlist_watched}",
+              style: const TextStyle(
+                color: black,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Review: ${watchlist_review}",
+              style: const TextStyle(
+                color: black,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.fromLTRB(35, 10, 10, 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Align(
+              alignment: Alignment.bottomRight,
+              child: FloatingActionButton(
+                backgroundColor: purple,
+                onPressed: () => Navigator.pop(context),
+                child: const Icon(Icons.arrow_back),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
